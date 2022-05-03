@@ -104,6 +104,10 @@ public:
      * @brief Additional info to pass on to shaders
     */
     std::unordered_map<std::string, float> shaderAttributes;
+    /**
+     * @brief Additional info to pass on to shaders
+    */
+    std::unordered_map<std::string, glm::vec3> shaderAttributes3f; 
 private:
     /**
      * @brief Mesh Identifier.

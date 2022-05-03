@@ -40,6 +40,22 @@ Obj::Obj()
 {
 }
 
+void Obj::GenerateNormals(bool smooth)
+{
+	verticesNormals.resize(verticesPos.size(), glm::vec3{ 0.0f });
+
+	for (auto & face : faces)
+	{
+		face.vn = face.v;
+		const glm::vec3 & p0 = verticesPos[face.v[0] - 1], & p1 = verticesPos[face.v[1] - 1], & p2 = verticesPos[face.v[2] - 1];
+		glm::vec3 faceNormal = glm::cross(p0 - p1, p1 - p2);
+
+		verticesNormals[face.vn[0] - 1] += faceNormal;
+		verticesNormals[face.vn[1] - 1] += faceNormal;
+		verticesNormals[face.vn[2] - 1] += faceNormal;
+	}
+}
+
 bool Obj::TryLoad(const char * fileName)
 {
 	std::ifstream in;
@@ -94,7 +110,7 @@ bool Obj::TryLoad(const char * fileName)
 						v.emplace_back(std::stoi(parts[0]));
 						vn.emplace_back(std::stoi(parts[1]));
 					}
-					else
+					else if (facePart.find("/") != std::string::npos)
 					{
 						std::vector<std::string> parts = tokenize(facePart, "/");
 
@@ -116,6 +132,10 @@ bool Obj::TryLoad(const char * fileName)
 								v.emplace_back(std::stoi(parts[0]));
 								break;
 						}
+					}
+					else
+					{
+						v.emplace_back(std::stoi(facePart));
 					}
 				}
 				faces.emplace_back(v, vt, vn);

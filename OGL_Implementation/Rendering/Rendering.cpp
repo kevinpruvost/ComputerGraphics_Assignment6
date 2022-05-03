@@ -79,17 +79,23 @@ void Rendering::DrawFaces(Entity & entity)
 	shader.SetUniformMatrix4f("model", model);
 
 	for (const auto & pair : entity.shaderAttributes)
-	{
 		shader.SetUniformFloat(pair.first.c_str(), pair.second);
-	}
+	for (const auto & pair : entity.shaderAttributes3f)
+		shader.SetUniformFloat(pair.first.c_str(), pair.second);
 
-	// To shader->SetInt
-	shader.SetUniformInt("_texture", 0);
-	glActiveTexture(GL_TEXTURE0);
-	if (entity.GetTexture().GetWidth() != 0)
-		glBindTexture(GL_TEXTURE_2D, entity.GetTexture().GetTexture());
+	if ((*entity.GetMesh())->HasTextureCoordinates())
+	{
+		shader.SetUniformInt("_texture", 0);
+		glActiveTexture(GL_TEXTURE0);
+		if (entity.GetTexture().GetWidth() != 0)
+			glBindTexture(GL_TEXTURE_2D, entity.GetTexture().GetTexture());
+		else
+			glBindTexture(GL_TEXTURE_2D, 0);
+	}
 	else
-		glBindTexture(GL_TEXTURE_2D, 0);
+	{
+		shader.SetUniformInt("useTexture", 0);
+	}
 
 	glBindVertexArray(entity.GetMesh().facesVAO());
 
@@ -368,6 +374,8 @@ void Rendering::LoadShadersAndFonts()
 
 	Shader bezierWireframeShader = GenerateShader(Constants::Paths::bezierWireframeShaderVertex, Constants::Paths::bezierWireframeShaderFrag, Constants::Paths::bezierWireframeShaderTcs, Constants::Paths::bezierWireframeShaderTes);
 
+	Shader axisDisplayerShader = GenerateShader(Constants::Paths::axisDisplayerShaderVertex, Constants::Paths::axisDisplayerShaderFrag);
+
 	shaders.insert({Constants::Paths::lightShaderVertex,     std::make_unique<Shader>(lightShader)});
 	shaders.insert({Constants::Paths::pointShaderVertex,     std::make_unique<Shader>(pointShader)});
 	shaders.insert({Constants::Paths::faceShaderVertex,      std::make_unique<Shader>(faceShader)});
@@ -379,6 +387,7 @@ void Rendering::LoadShadersAndFonts()
 	shaders.insert({Constants::Paths::snowShaderVertex,      std::make_unique<Shader>(snowShader) });
 	shaders.insert({Constants::Paths::bezierShaderVertex,    std::make_unique<Shader>(bezierShader) });
 	shaders.insert({Constants::Paths::bezierWireframeShader,    std::make_unique<Shader>(bezierWireframeShader) });
+	shaders.insert({Constants::Paths::axisDisplayerShaderVertex,    std::make_unique<Shader>(axisDisplayerShader) });
 
 	// Setting default shaders
 	SetDefaultPointShader(pointShader);
@@ -397,9 +406,15 @@ void Rendering::LoadShadersAndFonts()
 	bezierWireframeShader.AddGlobalUbo(Constants::UBO::Ids::cameraProps, Constants::UBO::Names::cameraProps);
 
 	face2DShader.AddGlobalUbo(Constants::UBO::Ids::projection, Constants::UBO::Names::projection);
+	axisDisplayerShader.AddGlobalUbo(Constants::UBO::Ids::projection, Constants::UBO::Names::projection);
 
 	faceShader.AddGlobalUbo(Constants::UBO::Ids::lights, Constants::UBO::Names::lights);
 
 	text2DShader.AddGlobalUbo(Constants::UBO::Ids::projection, Constants::UBO::Names::projection);
 	text3DShader.AddGlobalUbo(Constants::UBO::Ids::cameraProps, Constants::UBO::Names::cameraProps);
+}
+
+Shader & Rendering::Shaders(const std::string & str)
+{
+	return *shaders.at(str);
 }

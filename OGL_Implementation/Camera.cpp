@@ -98,7 +98,7 @@ GLuint Camera::GetProjViewMatrixUbo()
                 __zNear,  // zNear
                 __zFar // zFar
             );
-            glm::mat4 projection2D = glm::ortho(0.0f, static_cast<GLfloat>(__wWidth), 0.0f, static_cast<GLfloat>(__wHeight));
+            glm::mat4 projection2D = glm::ortho(0.0f, static_cast<GLfloat>(__wWidth), 0.0f, static_cast<GLfloat>(__wHeight), -__zFar, __zFar);
             __hasReshaped = false;
 
             // Reassign projection matrix

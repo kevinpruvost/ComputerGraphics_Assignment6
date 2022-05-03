@@ -34,6 +34,8 @@
 #include "OGL_Implementation\Entity\ParticleSystem\Snow\ParticleSystem_Snow.hpp"
 #include "OGL_Implementation\Image\Image2D.hpp"
 
+#include "OGL_Implementation\DebugInfo\AxisDisplayer.hpp"
+
 #include "Constants.hpp"
 
 int main()
@@ -44,65 +46,40 @@ int main()
 
 	Rendering::Init();
 
-	Texture groundTexture;
-	if (!GenerateTexture(Constants::Paths::ground1, groundTexture))
+	Texture sunTexture;
+	if (!sunTexture.GenerateTexture("resources/Textures/sun.jpg"))
 	{
-		LOG_PRINT(stderr, "Couldn't generate texture '%s'\n", Constants::Paths::ground1);
+		LOG_PRINT(stderr, "Couldn't load texture '%s'\n", "resources/Textures/sun.jpg");
 		return EXIT_FAILURE;
 	}
 
-	Mesh customMesh = GenerateMesh({
-		{-1.5f, 1.0f, -2.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f},
-		{-0.5f, 2.0f, -2.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f},
-		{0.0f,  0.0f, -2.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f},
-		{0.5f,  2.0f, -2.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f},
-		{1.5f,  1.0f, -2.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f},
+	Obj obj;
+	if (!obj.TryLoad(Constants::Paths::Models::Torus::objFile))
+	{
+		LOG_PRINT(stderr, "Couldn't load obj '%s'\n", Constants::Paths::Models::Torus::objFile);
+		return EXIT_FAILURE;
+	}
+	obj.GenerateNormals(true);
+	Mesh meshObj = GenerateMesh(obj);
 
-		{-1.5f, 2.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f},
-		{-0.5f, 1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f},
-		{0.0f,  0.5f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f},
-		{0.5f,  1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f},
-		{1.5f,  2.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f},
+	Entity entity(meshObj,
+		Rendering::Shaders(Constants::Paths::pointShaderVertex),
+		Rendering::Shaders(Constants::Paths::wireframeShaderVertex),
+		Rendering::Shaders(Constants::Paths::faceShaderVertex));
+	entity.shaderAttributes3f["faceColor"] = glm::vec3(0.0f, 1.0f, 0.5f);
 
-		{-1.5f, 1.0f,  0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f},
-		{-0.5f, -2.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f},
-		{0.0f,  -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f},
-		{0.5f,  1.0f,  0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f},
-		{1.5f,  0.0f,  0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f},
-
-		{-1.5,  0.0f,  1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f},
-		{-0.5,  1.0f,  1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f},
-		{0.0f,  1.5f,  1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f},
-		{0.5f,  0.0f,  1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f},
-		{1.5f, -1.0f,  1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f},
-
-		{-1.5f, 0.0f,  2.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f},
-		{-0.5f, 1.0f,  2.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f},
-		{0.0f,  1.0f,  2.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f},
-		{0.5f, -1.0f,  2.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f},
-		{1.5f, -1.0f,  2.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f}
-	});
-
-	Entity bezierEntity(customMesh,
-		*Rendering::shaders.at(Constants::Paths::pointShaderVertex),
-		*Rendering::shaders.at(Constants::Paths::bezierWireframeShader),
-		*Rendering::shaders.at(Constants::Paths::bezierShaderVertex));
-	bezierEntity.SetTexture(groundTexture);
-
-	float smoothness = 5.0f;
-	auto setSmoothness = [&]() {
-		bezierEntity.shaderAttributes["uOuter02"] =
-			bezierEntity.shaderAttributes["uOuter13"] =
-			bezierEntity.shaderAttributes["uInner0"] =
-			bezierEntity.shaderAttributes["uInner1"] = smoothness;
-	};
-	setSmoothness();
+	Mesh sphereMesh = GenerateMeshSphere();
+	PointLight sun(sphereMesh);
+	sun.SetTexture(sunTexture);
+	sun.pos = { 0.0f, 3.0f, 0.0f };
+	sun.ChangeSpecular(glm::vec3(0.7f));
+	sun.ChangeAmbient(glm::vec3(0.05f));
 
 	Camera camera(window->windowWidth(), window->windowHeight(), -2.0f, 4.0f, 5.0f);
 	camera.MovementSpeed *= 5.0f;
 	mainCamera = &camera;
 
-	camera.LookAt(bezierEntity.pos);
+	camera.LookAt(entity.pos);
 
 	bool cameraLock = false;
 	// GUI
@@ -112,7 +89,7 @@ int main()
 	bool autoRotation = true;
 	gui.AddCallback([&]() {
 		const float width = 320.0f;
-		const float height = 200.0f;
+		const float height = 400.0f;
 		ImGui::SetNextWindowSize({ width, height }, ImGuiCond_::ImGuiCond_Always);
 		ImGui::SetNextWindowPos(
 			{ImGui::GetIO().DisplaySize.x - 20.0f - width, 20.0f},
@@ -124,7 +101,7 @@ int main()
 		ImGui::SliderFloat("Time Multiplier", const_cast<float *>(&window->GetTimeMultiplier()), 0.0f, 5.0f);
 		ImGui::Checkbox("Enable/Disable GUI (Press T)", &enableGui);
 
-		int displayMode = DisplayMode - 1; 
+		int displayMode = DisplayMode - 1;
 		const char * const displayModeItems[7] = { "Vertices", "Wireframes", "Vertices/Wireframes", "Faces", "Vertices/Faces", "Wireframes/Faces", "All"};
 		if (ImGui::Combo("Display Mode", &displayMode, displayModeItems, IM_ARRAYSIZE(displayModeItems)))
 		{
@@ -133,18 +110,28 @@ int main()
 
 		ImGui::Checkbox("Auto-Rotation", &autoRotation);
 
-		if (ImGui::SliderFloat("Smoothness", &smoothness, 1.0f, 30.0f))
-		{
-			setSmoothness();
-		}
+		ImGui::ColorEdit3("Material Color", glm::value_ptr(entity.shaderAttributes3f["faceColor"]));
+
+		ImGui::SliderFloat("Constant", &sun.__constant, 0.0f, 1.0f);
+		ImGui::SliderFloat("Linear", &sun.__linear, 0.01f, 1.0f, "%.8f");
+		ImGui::SliderFloat("Quadratic", &sun.__quadratic, 0.001f, 1.0f, "%.10f");
+
+		if (ImGui::SliderFloat("Ambient", &sun.__ambient.x, 0.0f, 1.0f))
+			sun.__ambient.y = sun.__ambient.z = sun.__ambient.x;
+		if (ImGui::SliderFloat("Diffuse", &sun.__diffuse.x, 0.0f, 1.0f))
+			sun.__diffuse.y = sun.__diffuse.z = sun.__diffuse.x;
+		if (ImGui::SliderFloat("Specular", &sun.__specular.x, 0.0f, 1.0f))
+			sun.__specular.y = sun.__specular.z = sun.__specular.x;
 
 		ImGui::End();
 		return true;
 	});
 
-	float backgroundColor[4] = { 0.15f, 0.3f, 0.4f, 1.0f };
+	float backgroundColor[4] = { 0.0f, 0.0f, 0.03f, 1.0f };
 
 	glPointSize(5.0f);
+
+	AxisDisplayer axisDisplayer(Rendering::Shaders(Constants::Paths::axisDisplayerShaderVertex));
 
 	window->Loop([&]() {
 		// Render
@@ -172,13 +159,25 @@ int main()
 
 		if (window->key(GLFW_KEY_LEFT) == InputKey::Pressed)
 		{
-			smoothness = std::max(1.0f, smoothness - 2.0f * window->DeltaTime());
-			setSmoothness();
+			if (window->key(GLFW_KEY_LEFT_SHIFT) == InputKey::Pressed)
+				sun.pos.z -= window->DeltaTime() * 2.0f;
+			else
+				sun.pos.x -= window->DeltaTime() * 2.0f;
 		}
 		if (window->key(GLFW_KEY_RIGHT) == InputKey::Pressed)
 		{
-			smoothness = std::min(30.0f, smoothness + 2.0f * window->DeltaTime());
-			setSmoothness();
+			if (window->key(GLFW_KEY_LEFT_SHIFT) == InputKey::Pressed)
+				sun.pos.z += window->DeltaTime() * 2.0f;
+			else
+				sun.pos.x += window->DeltaTime() * 2.0f;
+		}
+		if (window->key(GLFW_KEY_UP) == InputKey::Pressed)
+		{
+			sun.pos.y += window->DeltaTime() * 2.0f;
+		}
+		if (window->key(GLFW_KEY_DOWN) == InputKey::Pressed)
+		{
+			sun.pos.y -= window->DeltaTime() * 2.0f;
 		}
 
 		// Enable/Disable GUI
@@ -220,16 +219,18 @@ int main()
 
 		if (autoRotation)
 		{
-			bezierEntity.quat.RotateY(30.0f * window->DeltaTime());
+			entity.quat.RotateY(30.0f * window->DeltaTime());
 		}
 
 		Rendering::Refresh();
 
 		// display mode & activate shader
-		Rendering::DrawEntity(bezierEntity);
+		Rendering::DrawEntity(entity);
+		Rendering::DrawEntity(sun);
 
 		if (enableGui)
 		{
+			axisDisplayer.Draw();
 			// Drawing ImGui GUI
 			if (!gui.DrawGUI()) return false;
 		}

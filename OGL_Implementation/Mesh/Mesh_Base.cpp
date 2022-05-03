@@ -11,6 +11,8 @@
 #include "OGL_Implementation\DebugInfo\Log.hpp"
 
 Mesh_Base::Mesh_Base()
+	: __hasTextureCoordinates{ true }
+	, __hasNormals{ true }
 {
 	LOG_PRINT(Log::LogMainFileName, "Constructed\n");
 
@@ -54,4 +56,14 @@ GLuint Mesh_Base::GetVerticesCount() const
 GLuint Mesh_Base::GetFacesVerticesCount() const
 {
 	return __facesNVert;
+}
+
+bool Mesh_Base::HasTextureCoordinates() const
+{
+	return __hasTextureCoordinates;
+}
+
+bool Mesh_Base::HasNormals() const
+{
+	return __hasNormals;
 }

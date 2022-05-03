@@ -43,6 +43,12 @@ public:
 	 * @return count of vertices
 	*/
 	int numVertices() const { return int(verticesPos.size()); }
+	
+	/**
+	 * @brief Generates Normals if there is none
+	 * @param smooth 
+	*/
+	void GenerateNormals(bool smooth = true);
 
 	/**
 	 * @brief Tries loading of a .obj file

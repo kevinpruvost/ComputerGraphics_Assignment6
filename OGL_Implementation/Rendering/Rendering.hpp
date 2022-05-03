@@ -62,5 +62,6 @@ private:
     static void LoadShadersAndFonts();
 
 public:
+    static Shader & Shaders(const std::string & str);
     static std::unordered_map<std::string, std::unique_ptr<Shader>> shaders;
 };

@@ -49,40 +49,48 @@ void Mesh_Obj::bindFaces(const Obj & obj)
 	glBindBuffer(GL_ARRAY_BUFFER, __facesVBO);
 
 	std::vector<GLfloat> data;
+	bool hasTextCoords = __hasTextureCoordinates = !obj.faces[0].vt.empty();
+
 	for (const auto & face : obj.faces)
 	{
 		for (int i = 0; i < 3; i++)
 		{
 			int vid = face.v[i] - 1;
-			int vnid = face.vn[i] - 1;
-			int vtid = face.vt[i] - 1;
 			data.emplace_back(obj.verticesPos[vid].x);
 			data.emplace_back(obj.verticesPos[vid].y);
 			data.emplace_back(obj.verticesPos[vid].z);
+			int vnid = face.vn[i] - 1;
 			data.emplace_back(obj.verticesNormals[vnid].x);
 			data.emplace_back(obj.verticesNormals[vnid].y);
 			data.emplace_back(obj.verticesNormals[vnid].z);
-			data.emplace_back(obj.verticesTextureCoordinates[vtid].x);
-			data.emplace_back(obj.verticesTextureCoordinates[vtid].y);
-			LOG_PRINT(stdout, "%d: %f\\%f\n", vtid, obj.verticesTextureCoordinates[vtid].x, obj.verticesTextureCoordinates[vtid].y);
+			if (hasTextCoords)
+			{
+				int vtid = face.vt[i] - 1;
+				data.emplace_back(obj.verticesTextureCoordinates[vtid].x);
+				data.emplace_back(obj.verticesTextureCoordinates[vtid].y);
+			}
 		}
 	}
 
 	glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * data.size(), &data.front(), GL_STATIC_DRAW);
 
 	// set vertex attribute pointers
+	size_t totalSize = (6 + (hasTextCoords ? 2 : 0)) * sizeof(GLfloat);
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid *)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, totalSize, (GLvoid *)0);
 	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid *)(3 * sizeof(GLfloat)));
-	glEnableVertexAttribArray(2);
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid *)(6 * sizeof(GLfloat)));
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, totalSize, (GLvoid *)(3 * sizeof(GLfloat)));
+	if (hasTextCoords)
+	{
+		glEnableVertexAttribArray(2);
+		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, totalSize, (GLvoid *)(6 * sizeof(GLfloat)));
+	}
 
 	// unbind VBO & VAO
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
 
-	__facesNVert = GLsizei(data.size() / 8);
+	__facesNVert = GLsizei(data.size() / (6 + (hasTextCoords ? 2 : 0)));
 }
 
 void Mesh_Obj::bindVertices(const Obj & obj)

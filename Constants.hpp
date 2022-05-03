@@ -12,7 +12,7 @@ namespace Constants
 {
 namespace Window
 {
-constexpr const char * windowName = "Assignment 5: Pruvost Kevin 2021400603";
+constexpr const char * windowName = "Assignment 6: Pruvost Kevin 2021400603";
 }; // !Constants::Window
 
 namespace Paths
@@ -51,6 +51,9 @@ constexpr const char * bezierWireframeShaderFrag   = "resources/Shaders/wirefram
 constexpr const char * bezierWireframeShaderVertex = "resources/Shaders/wireframe.vert.glsl";
 constexpr const char * bezierWireframeShaderTcs    = "resources/Shaders/bezier.tcs.glsl";
 constexpr const char * bezierWireframeShaderTes    = "resources/Shaders/bezier.tes.glsl";
+
+constexpr const char * axisDisplayerShaderVertex = "resources/Shaders/axisdisplayer.vert.glsl";
+constexpr const char * axisDisplayerShaderFrag   = "resources/Shaders/axisdisplayer.frag.glsl";
 // Planets
 constexpr const char * star = "resources/Textures/Star.bmp";
 // Snow
@@ -70,6 +73,10 @@ constexpr const char * objFile  = "resources/Models/real_rat.obj";
 constexpr const char * material = "resources/Models/real_rat.mtl";
 constexpr const char * texture  = "resources/Models/rat.png";
 }; // !Constants::Paths::Models::Rat
+namespace Torus
+{
+constexpr const char * objFile = "resources/Models/eight.uniform.obj";
+}; // !Constants::Paths::Models::Torus
 }; // !Constants::Paths::Models
 }; // !Constants::Paths
 

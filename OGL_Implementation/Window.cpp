@@ -47,6 +47,8 @@ bool Window::Initialize(const char * windowName, const char * iconPath)
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	// Anti Aliasing
+	glfwWindowHint(GLFW_SAMPLES, 4);
 
 	// Create a GLFWwindow object that we can use for GLFW's functions
 	if ((window = glfwCreateWindow(WIDTH, HEIGHT, windowName, nullptr, nullptr)) == nullptr)
@@ -93,10 +95,15 @@ bool Window::Initialize(const char * windowName, const char * iconPath)
 
 	// Setup OpenGL options
 	glEnable(GL_DEPTH_TEST); // Depth
-	//glEnable(GL_CULL_FACE); // Face Culling
+	glEnable(GL_CULL_FACE); // Face Culling
 	glEnable(GL_BLEND); // Blending
-	glEnable(GL_LIGHTING);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); // Blending options
+
+	glEnable(GL_MULTISAMPLE);
+	
+	int iNumSamples;
+	glGetIntegerv(GL_SAMPLES, &iNumSamples);
+	LOG_PRINT(stdout, "SAMPLES: %d\n", iNumSamples);
 	return true;
 }
 

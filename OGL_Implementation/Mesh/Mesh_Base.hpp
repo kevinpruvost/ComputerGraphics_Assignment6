@@ -53,12 +53,16 @@ public:
     };
     virtual DrawMode GetDrawMode() const = 0;
 
+    bool HasTextureCoordinates() const;
+    bool HasNormals() const;
+
 private:
 
 protected:
     GLuint __verticesVAO, __facesVAO;
     GLuint __verticesVBO, __facesVBO;
     GLuint __verticesNVert, __facesNVert;
+    bool __hasTextureCoordinates, __hasNormals;
 };
 
 #include "Mesh_Base.inl"

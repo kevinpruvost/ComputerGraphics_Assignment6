@@ -80,6 +80,10 @@ out vec4 color;
 
 uniform sampler2D _texture;
 uniform Material material;
+uniform bool useTexture = true;
+uniform vec3 faceColor;
+
+vec3 beforeColor;
 
 void main()
 {
@@ -88,10 +92,15 @@ void main()
     vec3 viewDir = normalize(viewPos.xyz - FragPos);
     
     vec3 result = vec3(0.0);
+
+    if (useTexture)
+        beforeColor = vec3(texture(_texture, TexCoords));
+    else
+        beforeColor = faceColor;
+
     for(int i = 0; i < pointLightsCount; i++)
         result += CalcPointLight(pointLights[i], norm, FragPos, viewDir);
     color = vec4(result, 1.0);
-//	color = texture(_texture, TexCoords);
 }
 
 // calculates the color when using a directional light.
@@ -107,8 +116,8 @@ vec3 CalcDirLight(DirectionLight light, vec3 normal, vec3 viewDir)
     // vec3 ambient = light.ambient * vec3(texture(material.diffuse, TexCoords));
     // vec3 diffuse = light.diffuse * diff * vec3(texture(material.diffuse, TexCoords));
     // vec3 specular = light.specular * spec * vec3(texture(material.specular, TexCoords));
-    vec3 ambient = light.ambient * vec3(texture(_texture, TexCoords));
-    vec3 diffuse = light.diffuse * diff * vec3(texture(_texture, TexCoords));
+    vec3 ambient = light.ambient * beforeColor;
+    vec3 diffuse = light.diffuse * diff * beforeColor;
     vec3 specular = vec3(0.0);
     return (ambient + diffuse + specular);
 }
@@ -130,9 +139,9 @@ vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
     //vec3 ambient = light.ambient * vec3(texture(material.diffuse, TexCoords));
     //vec3 diffuse = light.diffuse * diff * vec3(texture(material.diffuse, TexCoords));
     //vec3 specular = light.specular * spec * vec3(texture(material.specular, TexCoords));
-    vec3 ambient = light.ambient * vec3(texture(_texture, TexCoords));
-    vec3 diffuse = light.diffuse * diff * vec3(texture(_texture, TexCoords));
-    vec3 specular = light.specular * spec * vec3(texture(_texture, TexCoords));
+    vec3 ambient = light.ambient * beforeColor;
+    vec3 diffuse = light.diffuse * diff * beforeColor;
+    vec3 specular = light.specular * spec * beforeColor;
     ambient *= attenuation;
     diffuse *= attenuation;
     specular *= attenuation;
