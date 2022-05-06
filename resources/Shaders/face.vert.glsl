@@ -21,11 +21,12 @@ layout (std140) uniform CameraProps
 out vec2 TexCoords;
 out vec3 FragPos;
 out vec3 Normal;
+flat out vec3 flatNormal;
 
 void main()
 {
 	gl_Position = viewProj * model * vec4(aPos, 1.0f);
 	TexCoords = aTexCoords;
 	FragPos = vec3(model * vec4(aPos, 1.0));
-    Normal = mat3(transpose(inverse(model))) * aNormal;
+    flatNormal = Normal = mat3(transpose(inverse(model))) * aNormal;
 }

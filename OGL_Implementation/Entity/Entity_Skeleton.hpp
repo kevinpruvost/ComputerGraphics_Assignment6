@@ -16,8 +16,8 @@
 
 class Entity_Skeleton;
 
-/// @brief Concept checking if the type is an integral or a floating point.
 template<class T>
+/// @brief Concept checking if the type is an integral or a floating point.
 concept Entity_Skeleton_Based = std::is_base_of_v<Entity_Skeleton, T>;
 
 /**

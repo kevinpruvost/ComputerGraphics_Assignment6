@@ -79,9 +79,13 @@ void Rendering::DrawFaces(Entity & entity)
 	shader.SetUniformMatrix4f("model", model);
 
 	for (const auto & pair : entity.shaderAttributes)
-		shader.SetUniformFloat(pair.first.c_str(), pair.second);
-	for (const auto & pair : entity.shaderAttributes3f)
-		shader.SetUniformFloat(pair.first.c_str(), pair.second);
+		pair.second->Render(pair.first, shader);
+
+	for (const auto & pair : entity.attributes)
+	{
+		auto & attribute = *pair.second;
+		attribute.Render(shader);
+	}
 
 	if ((*entity.GetMesh())->HasTextureCoordinates())
 	{
@@ -126,10 +130,8 @@ void Rendering::DrawWireframe(Entity & entity)
 	// use the same color for all points
 	shader.SetUniformFloat("ourColor", WireframeColors[0]);
 
-	for (const auto & pair : entity.shaderAttributes)
-	{
-		shader.SetUniformFloat(pair.first.c_str(), pair.second);
-	}
+	for(const auto & pair : entity.shaderAttributes)
+		pair.second->Render(pair.first, shader);
 
 	glBindVertexArray(entity.GetMesh().facesVAO());
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);

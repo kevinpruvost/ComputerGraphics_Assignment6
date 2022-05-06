@@ -32,6 +32,11 @@ public:
     operator const glm::quat & () const;
 
     /**
+     * @brief Sets degrees rotation
+     * @param rotation 
+    */
+    void SetRotation(const glm::vec3 & rotation);
+    /**
      * @brief Rotates on X, Y, Z axis (degrees)
      * @param rotation 
     */
@@ -51,6 +56,13 @@ public:
      * @param rotation 
     */
     void RotateZ(const float rotation);
+    /**
+     * @brief Returns Euler Angles
+     * https://en.wikipedia.org/wiki/Conversion_between_quaternions_and_Euler_angles#Quaternion_to_Euler_angles_conversion
+     * @return euler angles
+    */
+    glm::vec3 ToEulerAngles() const;
 
-public:
+private:
+    glm::vec3 __eulerAngles;
 };

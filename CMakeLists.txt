@@ -45,6 +45,7 @@ file (GLOB ASSIGNMENT_SOURCES
     OGL_Implementation/Mesh/*.cpp
     OGL_Implementation/Shader/*.cpp
     OGL_Implementation/Entity/*.cpp
+    OGL_Implementation/EntityAttribute/*.cpp
     OGL_Implementation/Entity/ParticleSystem/*.cpp
     OGL_Implementation/Entity/ParticleSystem/Spirals/*.cpp
     OGL_Implementation/Entity/ParticleSystem/Snow/*.cpp
@@ -54,6 +55,7 @@ file (GLOB ASSIGNMENT_SOURCES
     OGL_Implementation/Text/*.cpp
     OGL_Implementation/Tools/*.cpp
 )
+
 file (GLOB ASSIGNMENT_HEADERS
     *.hpp
     OGL_Implementation/*.hpp
@@ -62,6 +64,8 @@ file (GLOB ASSIGNMENT_HEADERS
     OGL_Implementation/Mesh/*.hpp
     OGL_Implementation/Shader/*.hpp
     OGL_Implementation/Entity/*.hpp
+    OGL_Implementation/EntityAttribute/*.hpp
+    OGL_Implementation/EntityAttribute/*.inl
     OGL_Implementation/Entity/*.inl
     OGL_Implementation/Entity/ParticleSystem/*.hpp
     OGL_Implementation/Entity/ParticleSystem/*.inl

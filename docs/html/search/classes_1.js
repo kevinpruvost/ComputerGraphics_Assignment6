@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['directionlight_5fshader_246',['DirectionLight_Shader',['../struct_direction_light___shader.html',1,'']]]
+  ['camera_269',['Camera',['../class_camera.html',1,'']]],
+  ['character_270',['Character',['../class_character.html',1,'']]]
 ];

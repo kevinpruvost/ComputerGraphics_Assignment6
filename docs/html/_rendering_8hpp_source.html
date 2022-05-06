@@ -126,17 +126,19 @@ $(function() {
 <div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    <span class="keyword">static</span> <span class="keywordtype">void</span> LoadShadersAndFonts();</div>
 <div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160; </div>
 <div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <span class="keyword">static</span> std::unordered_map&lt;std::string, std::unique_ptr&lt;Shader&gt;&gt; shaders;</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;};</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <span class="keyword">static</span> <a class="code" href="class_shader.html">Shader</a> &amp; Shaders(<span class="keyword">const</span> std::string &amp; str);</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    <span class="keyword">static</span> std::unordered_map&lt;std::string, std::unique_ptr&lt;Shader&gt;&gt; shaders;</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;};</div>
 <div class="ttc" id="a_entity_8hpp_html"><div class="ttname"><a href="_entity_8hpp.html">Entity.hpp</a></div><div class="ttdoc">Entity class.</div></div>
 <div class="ttc" id="a_image2_d_8hpp_html"><div class="ttname"><a href="_image2_d_8hpp.html">Image2D.hpp</a></div><div class="ttdoc">2D Image displayed directly on the camera perspective</div></div>
 <div class="ttc" id="a_particle_system_rendering_8hpp_html"><div class="ttname"><a href="_particle_system_rendering_8hpp.html">ParticleSystemRendering.hpp</a></div><div class="ttdoc">Particle System Rendering class.</div></div>
 <div class="ttc" id="a_text_8hpp_html"><div class="ttname"><a href="_text_8hpp.html">Text.hpp</a></div><div class="ttdoc">Text class.</div></div>
-<div class="ttc" id="aclass_entity_html"><div class="ttname"><a href="class_entity.html">Entity</a></div><div class="ttdoc">Representation of an entity with a mesh, position, rotation, scale. Able to give model matrix.</div><div class="ttdef"><b>Definition:</b> Entity.hpp:34</div></div>
+<div class="ttc" id="aclass_entity_html"><div class="ttname"><a href="class_entity.html">Entity</a></div><div class="ttdoc">Representation of an entity with a mesh, position, rotation, scale. Able to give model matrix.</div><div class="ttdef"><b>Definition:</b> Entity.hpp:37</div></div>
 <div class="ttc" id="aclass_image2_d_html"><div class="ttname"><a href="class_image2_d.html">Image2D</a></div><div class="ttdoc">Texture drawn in an orthogonal projection.</div><div class="ttdef"><b>Definition:</b> Image2D.hpp:19</div></div>
 <div class="ttc" id="aclass_particle_system___base_html"><div class="ttname"><a href="class_particle_system___base.html">ParticleSystem_Base</a></div><div class="ttdoc">Manages the whole particle systems animation &amp; overall process. Inherits Entity.</div><div class="ttdef"><b>Definition:</b> ParticleSystem_Base.hpp:20</div></div>
 <div class="ttc" id="aclass_rendering_html"><div class="ttname"><a href="class_rendering.html">Rendering</a></div><div class="ttdoc">Static class containing rendering utilities.</div><div class="ttdef"><b>Definition:</b> Rendering.hpp:22</div></div>
 <div class="ttc" id="aclass_rendering_html_af8755faf53cde713daa20130409086fc"><div class="ttname"><a href="class_rendering.html#af8755faf53cde713daa20130409086fc">Rendering::Init</a></div><div class="ttdeci">static void Init()</div><div class="ttdoc">To call to initialize Rendering.</div><div class="ttdef"><b>Definition:</b> Rendering.cpp:55</div></div>
+<div class="ttc" id="aclass_shader_html"><div class="ttname"><a href="class_shader.html">Shader</a></div><div class="ttdoc">Contains Shader Id and methods related to the shader database. It also helps having a much lighter cl...</div><div class="ttdef"><b>Definition:</b> Shader.hpp:27</div></div>
 <div class="ttc" id="aclass_text2_d_html"><div class="ttname"><a href="class_text2_d.html">Text2D</a></div><div class="ttdoc">2D Text class</div><div class="ttdef"><b>Definition:</b> Text.hpp:29</div></div>
 <div class="ttc" id="aclass_text3_d_html"><div class="ttname"><a href="class_text3_d.html">Text3D</a></div><div class="ttdoc">3D Text class</div><div class="ttdef"><b>Definition:</b> Text.hpp:64</div></div>
 </div><!-- fragment --></div><!-- contents -->

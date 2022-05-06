@@ -12,9 +12,17 @@
 #include "OGL_Implementation\Quaternion.hpp"
 #include "OGL_Implementation\Shader\Shader.hpp"
 
+/**
+ * @brief Displays all 3 axis (x,y,z) in red,green,blue respectively
+*/
 class AxisDisplayer
 {
 public:
+    /**
+     * @brief Constructs Axis Displayer with its shader and the sizes of each axis
+     * @param shader_ 
+     * @param axisSize 
+    */
     AxisDisplayer(const Shader & shader_, const GLfloat axisSize = 60.0f);
     ~AxisDisplayer();
 

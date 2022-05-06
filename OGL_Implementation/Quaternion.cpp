@@ -7,8 +7,13 @@
  *********************************************************************/
 #include "Quaternion.hpp"
 
+// C++ includes
+#include <numbers>
+#include <algorithm>
+
 Quaternion::Quaternion(const glm::vec3 & rotation)
     : glm::quat(glm::radians(rotation))
+    , __eulerAngles{ rotation }
 {
 }
 
@@ -32,30 +37,50 @@ Quaternion::operator const glm::quat & () const
     return *(dynamic_cast<const glm::quat *>(this));
 }
 
+#include "OGL_Implementation\DebugInfo\Log.hpp"
+#include <glm\gtx\string_cast.hpp>
+void Quaternion::SetRotation(const glm::vec3 & rotation)
+{
+    *this = glm::quat(glm::radians(rotation));
+    __eulerAngles = rotation;
+}
+
 void Quaternion::Rotate(const glm::vec3 & rotation)
 {
-    if (abs(rotation.x) > FLT_EPSILON) RotateX(rotation.x);
-    if (abs(rotation.y) > FLT_EPSILON) RotateY(rotation.y);
-    if (abs(rotation.z) > FLT_EPSILON) RotateZ(rotation.z);
+    LOG_PRINT(stdout, "Rotation: %s\n", glm::to_string(rotation).c_str());
+    const float rot = std::max({ abs(rotation.x), abs(rotation.y), abs(rotation.z) });
+    if (rot == 0.0f) return;
+    const glm::vec3 axes = rotation / rot;
+    LOG_PRINT(stdout, "Rot: %.2f\nAxes: %s\n", rot, glm::to_string(axes).c_str());
+    *this = glm::rotate(*this, glm::radians(rot), axes);
+    __eulerAngles += rotation;
+    __eulerAngles.x = std::fmod(__eulerAngles.x, 360.0f - std::numeric_limits<float>::epsilon());
+    __eulerAngles.y = std::fmod(__eulerAngles.y, 360.0f - std::numeric_limits<float>::epsilon());
+    __eulerAngles.z = std::fmod(__eulerAngles.z, 360.0f - std::numeric_limits<float>::epsilon());
 }
 
 void Quaternion::RotateX(const float rotation)
 {
     constexpr const glm::vec3 X(1.0f, 0.0f, 0.0f);
-    *this = glm::rotate(*this, glm::radians(rotation), X);
-//    eulerAngles.x = std::fmod(eulerAngles.x + rotation, 360.0f - std::numeric_limits<float>::epsilon());
+    *this = glm::rotate(*this, glm::radians(std::fmod(rotation, 360.0f)), X);
+    __eulerAngles.x = std::fmod(__eulerAngles.x + rotation, 360.0f - std::numeric_limits<float>::epsilon());
 }
 
 void Quaternion::RotateY(const float rotation)
 {
     constexpr const glm::vec3 Y(0.0f, 1.0f, 0.0f);
-    *this = glm::rotate(*this, glm::radians(rotation), Y);
-//    eulerAngles.y = std::fmod(eulerAngles.y + rotation, 360.0f - std::numeric_limits<float>::epsilon());
+    *this = glm::rotate(*this, glm::radians(std::fmod(rotation, 360.0f)), Y);
+    __eulerAngles.y = std::fmod(__eulerAngles.y + rotation, 360.0f - std::numeric_limits<float>::epsilon());
 }
 
 void Quaternion::RotateZ(const float rotation)
 {
     constexpr const glm::vec3 Z(0.0f, 0.0f, 1.0f);
-    *this = glm::rotate(*this, glm::radians(rotation), Z);
-//    eulerAngles.z = std::fmod(eulerAngles.z + rotation, 360.0f - std::numeric_limits<float>::epsilon());
+    *this = glm::rotate(*this, glm::radians(std::fmod(rotation, 360.0f)), Z);
+    __eulerAngles.z = std::fmod(__eulerAngles.z + rotation, 360.0f - std::numeric_limits<float>::epsilon());
+}
+
+glm::vec3 Quaternion::ToEulerAngles() const
+{
+    return __eulerAngles;
 }

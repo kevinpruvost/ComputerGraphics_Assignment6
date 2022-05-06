@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['camera_244',['Camera',['../class_camera.html',1,'']]],
-  ['character_245',['Character',['../class_character.html',1,'']]]
+  ['axisdisplayer_268',['AxisDisplayer',['../class_axis_displayer.html',1,'']]]
 ];

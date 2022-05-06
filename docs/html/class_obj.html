@@ -88,6 +88,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:abceb82031eb8a98248508216ee3061eb"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_obj.html#abceb82031eb8a98248508216ee3061eb">numVertices</a> () const</td></tr>
 <tr class="memdesc:abceb82031eb8a98248508216ee3061eb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns Count of vertices.  <a href="class_obj.html#abceb82031eb8a98248508216ee3061eb">More...</a><br /></td></tr>
 <tr class="separator:abceb82031eb8a98248508216ee3061eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a620caf76838df786affa251b4b60127d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_obj.html#a620caf76838df786affa251b4b60127d">GenerateNormals</a> (bool smooth=true)</td></tr>
+<tr class="memdesc:a620caf76838df786affa251b4b60127d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates Normals if there is none.  <a href="class_obj.html#a620caf76838df786affa251b4b60127d">More...</a><br /></td></tr>
+<tr class="separator:a620caf76838df786affa251b4b60127d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:addee8e85995bc3289d00c7518a6e436b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_obj.html#addee8e85995bc3289d00c7518a6e436b">TryLoad</a> (const char *fileName)</td></tr>
 <tr class="memdesc:addee8e85995bc3289d00c7518a6e436b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tries loading of a .obj file.  <a href="class_obj.html#addee8e85995bc3289d00c7518a6e436b">More...</a><br /></td></tr>
 <tr class="separator:addee8e85995bc3289d00c7518a6e436b"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -113,6 +116,32 @@ std::vector&lt; <a class="el" href="struct_face.html">Face</a> &gt;&#160;</td><t
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Manages parsing and loading of .obj files. </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
+<a id="a620caf76838df786affa251b4b60127d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a620caf76838df786affa251b4b60127d">&#9670;&nbsp;</a></span>GenerateNormals()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Obj::GenerateNormals </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>smooth</em> = <code>true</code></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Generates Normals if there is none. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">smooth</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="a9965c3ce5152665a888c3f99f6519817"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a9965c3ce5152665a888c3f99f6519817">&#9670;&nbsp;</a></span>numTriangles()</h2>
 

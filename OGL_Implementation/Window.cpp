@@ -100,10 +100,6 @@ bool Window::Initialize(const char * windowName, const char * iconPath)
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); // Blending options
 
 	glEnable(GL_MULTISAMPLE);
-	
-	int iNumSamples;
-	glGetIntegerv(GL_SAMPLES, &iNumSamples);
-	LOG_PRINT(stdout, "SAMPLES: %d\n", iNumSamples);
 	return true;
 }
 

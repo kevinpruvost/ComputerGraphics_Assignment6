@@ -118,15 +118,19 @@ $(function() {
 <div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    };</div>
 <div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <span class="keyword">virtual</span> DrawMode GetDrawMode() <span class="keyword">const</span> = 0;</div>
 <div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160; </div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160; </div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="keyword">protected</span>:</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    GLuint __verticesVAO, __facesVAO;</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    GLuint __verticesVBO, __facesVBO;</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    GLuint __verticesNVert, __facesNVert;</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;};</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160; </div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="_mesh___base_8inl.html">Mesh_Base.inl</a>&quot;</span></div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <span class="keywordtype">bool</span> HasTextureCoordinates() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <span class="keywordtype">bool</span> HasNormals() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160; </div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160; </div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="keyword">protected</span>:</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    GLuint __verticesVAO, __facesVAO;</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    GLuint __verticesVBO, __facesVBO;</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    GLuint __verticesNVert, __facesNVert;</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <span class="keywordtype">bool</span> __hasTextureCoordinates, __hasNormals;</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;};</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160; </div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="_mesh___base_8inl.html">Mesh_Base.inl</a>&quot;</span></div>
 <div class="ttc" id="a_mesh___base_8hpp_html_ab76ef3ced5e347ccade7e86167c2169a"><div class="ttname"><a href="_mesh___base_8hpp.html#ab76ef3ced5e347ccade7e86167c2169a">Mesh_Based</a></div><div class="ttdeci">concept Mesh_Based</div><div class="ttdoc">Concept checking if the type is a Mesh_Base child.</div><div class="ttdef"><b>Definition:</b> Mesh_Base.hpp:20</div></div>
 <div class="ttc" id="a_mesh___base_8inl_html"><div class="ttname"><a href="_mesh___base_8inl.html">Mesh_Base.inl</a></div><div class="ttdoc">Mesh_Base inline code.</div></div>
 <div class="ttc" id="aclass_mesh___base_html"><div class="ttname"><a href="class_mesh___base.html">Mesh_Base</a></div><div class="ttdoc">Contains the real data of the mesh to be stored in a static database.</div><div class="ttdef"><b>Definition:</b> Mesh_Base.hpp:27</div></div>

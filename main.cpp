@@ -26,7 +26,6 @@
 #include "OGL_Implementation\Entity\Entity.hpp"
 #include "OGL_Implementation\OpenGL_Timer.hpp"
 #include "OGL_Implementation\DebugInfo\FpsCounter.hpp"
-#include "OGL_Implementation\Texture.hpp"
 #include "OGL_Implementation\Rendering\Rendering.hpp"
 #include "OGL_Implementation\Text\Text.hpp"
 #include "OGL_Implementation\Light\Light.hpp"
@@ -59,20 +58,26 @@ int main()
 		LOG_PRINT(stderr, "Couldn't load obj '%s'\n", Constants::Paths::Models::Torus::objFile);
 		return EXIT_FAILURE;
 	}
+	obj.GenerateNormals(false);
+	Mesh meshObjNotSmooth = GenerateMesh(obj);
 	obj.GenerateNormals(true);
-	Mesh meshObj = GenerateMesh(obj);
+	Mesh meshObjSmooth = GenerateMesh(obj);
 
-	Entity entity(meshObj,
+	Entity entity(meshObjSmooth,
 		Rendering::Shaders(Constants::Paths::pointShaderVertex),
 		Rendering::Shaders(Constants::Paths::wireframeShaderVertex),
 		Rendering::Shaders(Constants::Paths::faceShaderVertex));
-	entity.shaderAttributes3f["faceColor"] = glm::vec3(0.0f, 1.0f, 0.5f);
+	Material & entityMaterial = entity.AddMaterial();
+	entity.SetShaderAttribute("isNormalFlat", 0);
+	entityMaterial.diffuseColor = glm::vec3(0.0f, 1.0f, 0.6f);
+	entityMaterial.specularColor = glm::vec3(0.9f, 0.0f, 1.0f);
 
 	Mesh sphereMesh = GenerateMeshSphere();
 	PointLight sun(sphereMesh);
 	sun.SetTexture(sunTexture);
 	sun.pos = { 0.0f, 3.0f, 0.0f };
-	sun.ChangeSpecular(glm::vec3(0.7f));
+	sun.ChangeSpecular(glm::vec3(1.0f));
+	sun.ChangeDiffuse(glm::vec3(0.65f));
 	sun.ChangeAmbient(glm::vec3(0.05f));
 
 	Camera camera(window->windowWidth(), window->windowHeight(), -2.0f, 4.0f, 5.0f);
@@ -89,39 +94,68 @@ int main()
 	bool autoRotation = true;
 	gui.AddCallback([&]() {
 		const float width = 320.0f;
-		const float height = 400.0f;
+		const float height = 475.0f;
 		ImGui::SetNextWindowSize({ width, height }, ImGuiCond_::ImGuiCond_Always);
 		ImGui::SetNextWindowPos(
 			{ImGui::GetIO().DisplaySize.x - 20.0f - width, 20.0f},
 			ImGuiCond_::ImGuiCond_Always);
-		ImGui::Begin("Object Properties:");
+		ImGui::Begin("Settings:");
 
-		ImGui::Text(std::format("FPS: {}", GetFpsCount(window->DeltaTimeNoMultiplier(), 0.5f)).c_str());
-		ImGui::SliderInt("FPS cap", (int *)&window->fpsCap, 0, 60);
-		ImGui::SliderFloat("Time Multiplier", const_cast<float *>(&window->GetTimeMultiplier()), 0.0f, 5.0f);
 		ImGui::Checkbox("Enable/Disable GUI (Press T)", &enableGui);
-
-		int displayMode = DisplayMode - 1;
-		const char * const displayModeItems[7] = { "Vertices", "Wireframes", "Vertices/Wireframes", "Faces", "Vertices/Faces", "Wireframes/Faces", "All"};
-		if (ImGui::Combo("Display Mode", &displayMode, displayModeItems, IM_ARRAYSIZE(displayModeItems)))
+		if (ImGui::TreeNodeEx("General", ImGuiTreeNodeFlags_::ImGuiTreeNodeFlags_DefaultOpen))
 		{
-			DisplayMode = static_cast<RenderingMode>(displayMode + 1);
+			ImGui::Text(std::format("FPS: {}", GetFpsCount(window->DeltaTimeNoMultiplier(), 0.5f)).c_str());
+			ImGui::SliderInt("FPS cap", (int *)&window->fpsCap, 0, 60);
+			ImGui::SliderFloat("Time Multiplier", const_cast<float *>(&window->GetTimeMultiplier()), 0.0f, 5.0f);
+
+			int displayMode = DisplayMode - 1;
+			const char * const displayModeItems[7] = { "Vertices", "Wireframes", "Vertices/Wireframes", "Faces", "Vertices/Faces", "Wireframes/Faces", "All" };
+			if (ImGui::Combo("Display Mode", &displayMode, displayModeItems, IM_ARRAYSIZE(displayModeItems)))
+			{
+				DisplayMode = static_cast<RenderingMode>(displayMode + 1);
+			}
+
+			ImGui::TreePop();
 		}
 
-		ImGui::Checkbox("Auto-Rotation", &autoRotation);
+		if (ImGui::TreeNodeEx("Mesh Properties", ImGuiTreeNodeFlags_::ImGuiTreeNodeFlags_DefaultOpen))
+		{
+			ImGui::Checkbox("Auto-Rotation", &autoRotation);
+			if (ImGui::Checkbox("Flat Mesh", (bool *)entity.GetShaderAttribute<int>("isNormalFlat")))
+			{
+				if (*entity.GetShaderAttribute<int>("isNormalFlat")) entity.SetMesh(meshObjNotSmooth);
+				else entity.SetMesh(meshObjSmooth);
+			}
 
-		ImGui::ColorEdit3("Material Color", glm::value_ptr(entity.shaderAttributes3f["faceColor"]));
+			gui.EditEntity(entity);
 
-		ImGui::SliderFloat("Constant", &sun.__constant, 0.0f, 1.0f);
-		ImGui::SliderFloat("Linear", &sun.__linear, 0.01f, 1.0f, "%.8f");
-		ImGui::SliderFloat("Quadratic", &sun.__quadratic, 0.001f, 1.0f, "%.10f");
+			ImGui::TreePop();
+		}
 
-		if (ImGui::SliderFloat("Ambient", &sun.__ambient.x, 0.0f, 1.0f))
-			sun.__ambient.y = sun.__ambient.z = sun.__ambient.x;
-		if (ImGui::SliderFloat("Diffuse", &sun.__diffuse.x, 0.0f, 1.0f))
-			sun.__diffuse.y = sun.__diffuse.z = sun.__diffuse.x;
-		if (ImGui::SliderFloat("Specular", &sun.__specular.x, 0.0f, 1.0f))
-			sun.__specular.y = sun.__specular.z = sun.__specular.x;
+		if (ImGui::TreeNodeEx("Material Properties", ImGuiTreeNodeFlags_::ImGuiTreeNodeFlags_DefaultOpen))
+		{
+			ImGui::SliderFloat("Shininess", &entityMaterial.shininess, 0.0f, 1024.0f);
+			ImGui::ColorEdit3("Diffuse", glm::value_ptr(entityMaterial.diffuseColor));
+			ImGui::ColorEdit3("Specular", glm::value_ptr(entityMaterial.specularColor));
+
+			ImGui::TreePop();
+		}
+
+		if (ImGui::TreeNodeEx("Light Properties", ImGuiTreeNodeFlags_::ImGuiTreeNodeFlags_DefaultOpen))
+		{
+			ImGui::SliderFloat("Constant", &sun.__constant, 0.0f, 1.0f);
+			ImGui::SliderFloat("Linear", &sun.__linear, 0.01f, 1.0f, "%.8f");
+			ImGui::SliderFloat("Quadratic", &sun.__quadratic, 0.001f, 1.0f, "%.10f");
+
+			if (ImGui::SliderFloat("Ambient", &sun.__ambient.x, 0.0f, 1.0f))
+				sun.__ambient.y = sun.__ambient.z = sun.__ambient.x;
+			if (ImGui::SliderFloat("Diffuse", &sun.__diffuse.x, 0.0f, 1.0f))
+				sun.__diffuse.y = sun.__diffuse.z = sun.__diffuse.x;
+			if (ImGui::SliderFloat("Specular", &sun.__specular.x, 0.0f, 1.0f))
+				sun.__specular.y = sun.__specular.z = sun.__specular.x;
+
+			ImGui::TreePop();
+		}
 
 		ImGui::End();
 		return true;

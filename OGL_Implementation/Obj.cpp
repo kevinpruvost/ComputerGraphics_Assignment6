@@ -42,6 +42,7 @@ Obj::Obj()
 
 void Obj::GenerateNormals(bool smooth)
 {
+	verticesNormals.clear();
 	verticesNormals.resize(verticesPos.size(), glm::vec3{ 0.0f });
 
 	for (auto & face : faces)
@@ -50,9 +51,18 @@ void Obj::GenerateNormals(bool smooth)
 		const glm::vec3 & p0 = verticesPos[face.v[0] - 1], & p1 = verticesPos[face.v[1] - 1], & p2 = verticesPos[face.v[2] - 1];
 		glm::vec3 faceNormal = glm::cross(p0 - p1, p1 - p2);
 
-		verticesNormals[face.vn[0] - 1] += faceNormal;
-		verticesNormals[face.vn[1] - 1] += faceNormal;
-		verticesNormals[face.vn[2] - 1] += faceNormal;
+		if (smooth)
+		{
+			verticesNormals[face.vn[0] - 1] += faceNormal;
+			verticesNormals[face.vn[1] - 1] += faceNormal;
+			verticesNormals[face.vn[2] - 1] += faceNormal;
+		}
+		else
+		{
+			verticesNormals[face.vn[0] - 1] = faceNormal;
+			verticesNormals[face.vn[1] - 1] = faceNormal;
+			verticesNormals[face.vn[2] - 1] = faceNormal;
+		}
 	}
 }
 

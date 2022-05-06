@@ -12,8 +12,11 @@
 
 #include "OGL_Implementation\Mesh\Mesh.hpp"
 #include "OGL_Implementation\Shader\Shader.hpp"
-#include "OGL_Implementation\Texture.hpp"
+#include "OGL_Implementation\EntityAttribute\Texture.hpp"
 #include "OGL_Implementation\Quaternion.hpp"
+
+#include "OGL_Implementation\EntityAttribute\EntityAttributeManager.hpp"
+#include "OGL_Implementation\EntityAttribute\ShaderAttributeManager.hpp"
 
 // GLM includes
 #include <glm\glm.hpp>
@@ -30,7 +33,7 @@
  * position, rotation, scale.
  * Able to give model matrix.
 */
-class Entity : public Entity_Skeleton
+class Entity : public Entity_Skeleton, public EntityAttributeManager, public ShaderAttributeManager
 {
 public:
     /**
@@ -100,14 +103,6 @@ public:
     */
     Quaternion quat;
 
-    /**
-     * @brief Additional info to pass on to shaders
-    */
-    std::unordered_map<std::string, float> shaderAttributes;
-    /**
-     * @brief Additional info to pass on to shaders
-    */
-    std::unordered_map<std::string, glm::vec3> shaderAttributes3f; 
 private:
     /**
      * @brief Mesh Identifier.

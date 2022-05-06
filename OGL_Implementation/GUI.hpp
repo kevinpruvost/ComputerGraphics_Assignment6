@@ -7,6 +7,12 @@
  *********************************************************************/
 #pragma once
 
+// Project includes
+#include "OGL_Implementation\Entity\Entity.hpp"
+
+// GLM includes
+#include <glm\glm.hpp>
+
 // ImGui includes
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
@@ -39,6 +45,8 @@ public:
      * @param lambda 
     */
     void AddCallback(const std::function<bool()> & lambda);
+
+    void EditEntity(Entity & entity);
 
 public:
 

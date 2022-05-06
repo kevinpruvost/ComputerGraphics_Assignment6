@@ -32,7 +32,7 @@ bool GUI::DrawGUI()
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
 
-    ImGui::SetNextWindowSize({300.0f, 220.0f}); 
+    ImGui::SetNextWindowSize({300.0f, 250.0f}); 
     ImGui::SetNextWindowPos({ 20.0f, 20.0f }, ImGuiCond_::ImGuiCond_Always);
     ImGui::Begin("Read me !");
     ImGui::Text(
@@ -48,7 +48,10 @@ bool GUI::DrawGUI()
         "\t- Down:     Left Ctrl\n"
         "- Camera Rotation: Mouse cursor\n"
         "- Wireframe Color Change: P\n"
-        "- Change Smoothness: Left/Right Arrows\n"
+        "- Move Light (Sun):\n"
+        "\t- X: Left / Right Arrows\n"
+        "\t- Y: Down / Up Arrows\n"
+        "\t- Z: LSHIFT + (Left / Right) Arrows\n"
     );
     ImGui::End();
 
@@ -64,4 +67,16 @@ bool GUI::DrawGUI()
 void GUI::AddCallback(const std::function<bool()> & lambda)
 {
     __callbacks.push_back(lambda);
+}
+
+void GUI::EditEntity(Entity & entity)
+{
+    glm::vec3 eulerAngles = entity.quat.ToEulerAngles();
+    glm::vec3 beforeEA = eulerAngles;
+    ImGui::SliderFloat3("Position", glm::value_ptr(entity.pos), -2.0f, 2.0f);
+    if (ImGui::SliderFloat3("Rotation", glm::value_ptr(eulerAngles), 0.0f, 359.999f))
+    {
+        entity.quat.SetRotation(eulerAngles);
+//        entity.quat.Rotate(eulerAngles - beforeEA);
+    }
 }

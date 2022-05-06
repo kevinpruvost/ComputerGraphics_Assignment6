@@ -13,7 +13,7 @@ with an executable file to launch directly.
 
 \htmlonly
 
-<iframe width="1280" height="720" src="https://www.youtube.com/embed/5OYFg4Jxs2E" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<iframe width="1280" height="720" src="https://www.youtube.com/embed/ZxSr5YX9_Ec" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 \endhtmlonly
 
@@ -22,6 +22,7 @@ with an executable file to launch directly.
 ### DebugInfo
 
 - [Log](class_log.html)
+- [AxisDisplayer](class_axis_displayer.html)
 
 ### Shader
 
@@ -52,6 +53,14 @@ with an executable file to launch directly.
 
 - [Entity](class_entity.html)
 - [Entity_Skeleton](class_entity___skeleton.html)
+
+### Entity Attributes
+
+- [EntityAttribute](class_entity_attribute.html)
+- [EntityAttributeManager](class_entity_attribute_manager.html)
+- [Material](class_material.html)
+- [ShaderAttribute](class_shader_attribute.html)
+- [ShaderAttributeManager](class_shader_attribute_manager.html)
 
 ## Particle Systems
 

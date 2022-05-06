@@ -7,11 +7,16 @@
 in vec2 TexCoords;
 in vec3 FragPos;
 in vec3 Normal;
+flat in vec3 flatNormal;  
 
 struct Material
 {
-    sampler2D diffuse;
-    sampler2D specular;
+    bool diffuseUseColor;
+    bool specularUseColor;
+    vec3 diffuseColor;
+    vec3 specularColor;
+    sampler2D diffuseTexture;
+    sampler2D specularTexture;
     float shininess;
 }; 
 
@@ -77,27 +82,32 @@ vec3 CalcDirLight(DirectionLight light, vec3 normal, vec3 viewDir);
 vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir);
 
 out vec4 color;
-
-uniform sampler2D _texture;
 uniform Material material;
-uniform bool useTexture = true;
-uniform vec3 faceColor;
+uniform bool isNormalFlat = false;
 
-vec3 beforeColor;
+vec3 GetDiffuseMaterial(Material mat)
+{
+    if (mat.diffuseUseColor)
+        return mat.diffuseColor;
+    else
+        return vec3(texture(mat.diffuseTexture, TexCoords));
+}
+
+vec3 GetSpecularMaterial(Material mat)
+{
+    if (mat.specularUseColor)
+        return mat.specularColor;
+    else
+        return vec3(texture(mat.specularTexture, TexCoords));
+}
 
 void main()
 {
     // Props
-    vec3 norm = normalize(Normal);
+    vec3 norm = normalize(isNormalFlat ? flatNormal : Normal);
     vec3 viewDir = normalize(viewPos.xyz - FragPos);
     
     vec3 result = vec3(0.0);
-
-    if (useTexture)
-        beforeColor = vec3(texture(_texture, TexCoords));
-    else
-        beforeColor = faceColor;
-
     for(int i = 0; i < pointLightsCount; i++)
         result += CalcPointLight(pointLights[i], norm, FragPos, viewDir);
     color = vec4(result, 1.0);
@@ -110,15 +120,12 @@ vec3 CalcDirLight(DirectionLight light, vec3 normal, vec3 viewDir)
     // diffuse shading
     float diff = max(dot(normal, lightDir), 0.0);
     // specular shading
-    //vec3 reflectDir = reflect(-lightDir, normal);
-    //float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
+    vec3 reflectDir = reflect(-lightDir, normal);
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
     // combine results
-    // vec3 ambient = light.ambient * vec3(texture(material.diffuse, TexCoords));
-    // vec3 diffuse = light.diffuse * diff * vec3(texture(material.diffuse, TexCoords));
-    // vec3 specular = light.specular * spec * vec3(texture(material.specular, TexCoords));
-    vec3 ambient = light.ambient * beforeColor;
-    vec3 diffuse = light.diffuse * diff * beforeColor;
-    vec3 specular = vec3(0.0);
+    vec3 ambient = light.ambient * GetDiffuseMaterial(material);
+    vec3 diffuse = light.diffuse * diff * GetDiffuseMaterial(material);
+    vec3 specular = light.specular * spec * GetSpecularMaterial(material);
     return (ambient + diffuse + specular);
 }
 
@@ -130,18 +137,14 @@ vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
     float diff = max(dot(normal, lightDir), 0.0);
     // specular shading
     vec3 reflectDir = reflect(-lightDir, normal);
-//    float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0), 128);
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
     // attenuation
     float distance = length(light.position - fragPos);
     float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));    
     // combine results
-    //vec3 ambient = light.ambient * vec3(texture(material.diffuse, TexCoords));
-    //vec3 diffuse = light.diffuse * diff * vec3(texture(material.diffuse, TexCoords));
-    //vec3 specular = light.specular * spec * vec3(texture(material.specular, TexCoords));
-    vec3 ambient = light.ambient * beforeColor;
-    vec3 diffuse = light.diffuse * diff * beforeColor;
-    vec3 specular = light.specular * spec * beforeColor;
+    vec3 ambient = light.ambient * GetDiffuseMaterial(material);
+    vec3 diffuse = light.diffuse * diff * GetDiffuseMaterial(material);
+    vec3 specular = light.specular * spec * GetSpecularMaterial(material);
     ambient *= attenuation;
     diffuse *= attenuation;
     specular *= attenuation;
