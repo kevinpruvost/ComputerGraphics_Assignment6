@@ -6,23 +6,19 @@
 
 # Introduction
 
-For this assignment, the main theme was `Bezier Surfaces`.
+For this assignment, the main theme was `Illumination Effect`.
 
 The objectives here were:
 
-1) Use 25 (5 x 5) control points
+1) Load the 3D model, then rotate and zoom it with the mouse or keyboard.
 
-2) Use subdivision control shader TCS to set subdivision level
+2) Using the combination of object’s material, ambient light, diffuse light and specular light
 
-3) Using subdivision control shader TES to calculate new vertex coordinates and texture
+to generate different illumination effect.
 
-coordinates according to the mathematical equation of Bezier surface
+3) All faces have the same color.
 
-4) Change smoothness of the surface by keyboard
-
-5) Support wireframe mode display.
-
-6) Add texture to Bezier surface. Choose the texture by yourself.
+Depending on the different calculation ways for normals ("vertex" normal vs "face" normal), you will get a smooth model or a less-smooth one (Figure 1,2,3 vs Figure 4). You only need to implement one of them.
 
 # Compilation
 
@@ -35,21 +31,22 @@ Though, as CMake permits it, you will be easily able to compile on other platfor
 
 For my Assignment, I got all these points covered:
 
-- Bezier Surface with 25 control points
-- Use of TCS & TES shaders
-- Change Smoothness by keyboard but also GUI
-- Wireframe mode
-- Texture used on the Bezier Surface
+- 3D Model loaded and movable with the ImGUI interface
+- Illumination effect (ambient, diffuse & specular) added
+- All faces have the same color
+- Every normals calculation methods are implemented (flat vs. smooth)
 - Bonus:
     - Display Mode (Vertices, Wireframe, Faces)
     - Enable/Disable GUI
-    - Particle Systems parameters can be edited
+    - X,Y,Z axis are displayed (in the bottom-left corner) to know where the models movement will occur
+    - Both Light source & illuminated object are movable
+    - Light properties, Material properties and Mesh Type (flat or smooth) are editable
 
 ## How to use it
 
-[![Demo](embed.png)](https://youtu.be/7NxV2O9rknI)
+[![Demo](embed.png)](https://youtu.be/ZxSr5YX9_Ec)
 
-You can launch the `Assignment5.exe`directly, if you already have Visual C++ Redistribuable.
+You can launch the `Assignment6.exe`directly, if you already have Visual C++ Redistribuable.
 
 The program was compiled in Release mode.
 
@@ -61,7 +58,10 @@ As it is displayed in the program, here are the controls by order of priority fo
 - Wireframe Color Change: P
 - Camera/Cursor Lock: L
 - Change Display Mode: C
-- Change Smoothness: ⬅️➡️
+- Sun Movement:
+    - X : ⬅️➡️
+    - Y: ⬆️ ⬇️
+    - Z: LSHIFT + ⬅️➡️
 - Camera Movement:
     - Forward: W (or Z on AZERTY layout)
     - Backward: S
@@ -76,6 +76,7 @@ As it is displayed in the program, here are the controls by order of priority fo
 - You can change the FPS cap/limit
 - You can set/unset Auto-Rotation
 - You can change the Time multiplier (multiplies deltaTime)
+- You can change parameters related to light, material & mesh
 
 # Code Architecture
 
